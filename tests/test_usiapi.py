@@ -1,6 +1,11 @@
 import unittest
 import os
 import json
+from unittest import TestCase
+
+import requests
+from mock import patch, Mock
+
 import config
 
 from archiver.usiapi import USIAPI
@@ -10,8 +15,33 @@ from archiver.converter import SampleConverter
 # TODO use mocks for requests
 # TODO add test cases
 
+class USIAPITest(TestCase):
+
+    def test_get_token_given_valid_credentials_return_token(self):
+        # given:
+        usi_api = USIAPI()
+
+        # and:
+        user_name = 'hca-ingest'
+        password = 'password'
+
+        # and:
+        expected_token = 'ab009c1'
+
+        # when:
+        with patch.object(requests, 'get') as http_get:
+            response = Mock()
+            response.ok = True
+            response.text = expected_token
+            http_get.return_value = response
+            token = usi_api.get_token(user_name, password)
+
+        # then:
+        self.assertEqual(expected_token, token)
+
 
 class TestUSIAPI(unittest.TestCase):
+
     def setUp(self):
         self.usi_api = USIAPI()
 
@@ -22,17 +52,6 @@ class TestUSIAPI(unittest.TestCase):
         self.converter = SampleConverter()
 
         pass
-
-    def test_get_token_given_valid_credentials_return_token(self):
-        aap_user = 'hca-ingest'
-        aap_password = ''
-
-        if 'AAP_API_PASSWORD' in os.environ:
-            aap_password = os.environ['AAP_API_PASSWORD']
-
-        token = self.usi_api.get_token(aap_user, aap_password)
-
-        self.assertTrue(token)
 
     def test_get_token_given_invalid_credentials_return_none(self):
         username = 'invalid'

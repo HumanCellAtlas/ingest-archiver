@@ -5,11 +5,11 @@ import config
 
 
 # TODO figure out how to refresh token when it's expired
-def get_aap_token(username, password):
+def get_aap_token(user_name, password):
     token = ''
 
     get_token_url = config.AAP_API_URL
-    response = requests.get(get_token_url, auth=(username, password))
+    response = requests.get(get_token_url, auth=(user_name, password))
 
     if response.ok:
         token = response.text
@@ -18,6 +18,7 @@ def get_aap_token(username, password):
 
 
 class USIAPI:
+
     def __init__(self):
         self.logger = logging.getLogger(__name__)
 
