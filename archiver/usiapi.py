@@ -6,7 +6,7 @@ import config
 
 # TODO figure out how to refresh token when it's expired
 def get_aap_token(user_name, password):
-    token = ''
+    token = None
 
     get_token_url = config.AAP_API_URL
     response = requests.get(get_token_url, auth=(user_name, password))
@@ -27,7 +27,7 @@ class USIAPI:
         self.headers = {
             'Content-type': 'application/json',
             'Accept': 'application/json',
-            'Authorization': 'Bearer ' + self.token
+            'Authorization': f'Bearer {self.token}'
         }
 
     def get_token(self, user, password):

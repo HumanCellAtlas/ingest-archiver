@@ -39,6 +39,24 @@ class USIAPITest(TestCase):
         # then:
         self.assertEqual(expected_token, token)
 
+    def test_get_token_given_invalid_credentials_return_none(self):
+        # given:
+        usi_api = USIAPI()
+
+        # and:
+        user_name = 'invalid'
+        password = 'invalid'
+
+        # when:
+        with patch.object(requests, 'get') as http_get:
+            response = Mock()
+            response.ok = False
+            http_get.return_value = response
+            token = usi_api.get_token(user_name, password)
+
+        # then:
+        self.assertFalse(token)
+
 
 class TestUSIAPI(unittest.TestCase):
 
@@ -52,14 +70,6 @@ class TestUSIAPI(unittest.TestCase):
         self.converter = SampleConverter()
 
         pass
-
-    def test_get_token_given_invalid_credentials_return_none(self):
-        username = 'invalid'
-        password = 'invalid'
-
-        token = self.usi_api.get_token(username, password)
-
-        self.assertFalse(token)
 
     def test_create_submission(self):
         usi_submission = self.usi_api.create_submission()
