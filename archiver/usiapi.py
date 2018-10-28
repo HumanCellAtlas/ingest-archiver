@@ -84,6 +84,9 @@ class USIAPI:
 
         return self._get_embedded_list(response, 'processingStatuses')
 
+    def fetch_validation_results(self, submittable_id, token):
+        return {}
+
     # ===
 
     def _get(self, url):

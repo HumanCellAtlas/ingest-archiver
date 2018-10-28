@@ -57,6 +57,18 @@ class USIAPITest(TestCase):
         # then:
         self.assertFalse(token)
 
+    def test_fetch_validation_results(self):
+        # given:
+        usi_api = USIAPI()
+
+        # when:
+        submittable_id = '3fde005'
+        authentication_token = '8dd9bb1'
+        results = usi_api.fetch_validation_results(submittable_id, authentication_token)
+
+        # then:
+        self.assertIsNotNone(results)
+
 
 class TestUSIAPI(unittest.TestCase):
 
