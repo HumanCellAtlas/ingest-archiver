@@ -29,6 +29,10 @@ class ValidationResult:
     def __init__(self, status=ValidationStatus.UNDEFINED):
         self.status = status
 
+    def from_json(self):
+        return {}
+
+
 class USIAPI:
 
     def __init__(self):
