@@ -20,16 +20,17 @@ def get_aap_token(user_name, password):
 
 
 class ValidationStatus(Enum):
-    UNDEFINED = 'undefined'
+    UNDEFINED = 'undefined' # default status; technically equivalent to "status not set"
     PENDING = 'pending'
     VALID = 'valid'
+    UNKNOWN = 'unknown' # status when given value is not in the list
 
     @staticmethod
     def from_value(status):
         if status in _validation_statuses:
             return ValidationStatus(status)
         else:
-            return ValidationStatus.UNDEFINED
+            return ValidationStatus.UNKNOWN
 
 
 _validation_statuses = [item.value for item in ValidationStatus]

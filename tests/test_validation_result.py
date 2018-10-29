@@ -32,3 +32,10 @@ class ValidationResultTest(TestCase):
         self.assertIsNotNone(validation_result)
         self.assertEqual(version, validation_result.version)
         self.assertEqual(validation_status, validation_result.status)
+
+
+class ValidationStatusTest(TestCase):
+
+    def test_from_value_unknown(self):
+        # expect:
+        self.assertEqual(ValidationStatus.UNKNOWN, ValidationStatus.from_value('not in list'))
