@@ -22,15 +22,30 @@ def get_aap_token(user_name, password):
 class ValidationStatus(Enum):
     UNDEFINED = 'undefined'
     PENDING = 'pending'
+    VALID = 'valid'
+
+    @staticmethod
+    def from_value(status):
+        if status in _validation_statuses:
+            return ValidationStatus(status)
+        else:
+            return ValidationStatus.UNDEFINED
+
+
+_validation_statuses = [item.value for item in ValidationStatus]
 
 
 class ValidationResult:
 
-    def __init__(self, status=ValidationStatus.UNDEFINED):
+    def __init__(self, version=0, status=ValidationStatus.UNDEFINED):
+        self.version = version
         self.status = status
 
-    def from_json(self):
-        return {}
+    @staticmethod
+    def from_json(json_source):
+        status = ValidationStatus.from_value(json_source.get('validationStatus'))
+        return ValidationResult(version=json_source.get('version'),
+                                status=status)
 
 
 class USIAPI:

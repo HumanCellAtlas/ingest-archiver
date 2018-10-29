@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from archiver.usiapi import ValidationResult
+from archiver.usiapi import ValidationResult, ValidationStatus
 
 
 class ValidationResultTest(TestCase):
@@ -22,3 +22,5 @@ class ValidationResultTest(TestCase):
 
         # then:
         self.assertIsNotNone(validation_result)
+        self.assertEqual(0, validation_result.version)
+        self.assertEqual(ValidationStatus.VALID, validation_result.status)
