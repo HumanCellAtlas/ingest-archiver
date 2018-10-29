@@ -18,7 +18,7 @@ def _create_test_json(version=0, status='pending'):
 class ValidationResultTest(TestCase):
 
     def test_from_json(self):
-        self._do_test_from_json(4, ValidationStatus.VALID)
+        self._do_test_from_json(4, 'Pass', ValidationStatus.PASS)
         self._do_test_from_json(0, ValidationStatus.PENDING)
 
     def _do_test_from_json(self, version: int, validation_status: ValidationStatus):

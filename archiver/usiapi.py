@@ -22,7 +22,7 @@ def get_aap_token(user_name, password):
 class ValidationStatus(Enum):
     UNDEFINED = 'undefined' # default status; technically equivalent to "status not set"
     PENDING = 'pending'
-    VALID = 'valid'
+    PASS = 'pass'
     UNKNOWN = 'unknown' # status when given value is not in the list
 
     @staticmethod
