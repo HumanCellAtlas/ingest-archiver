@@ -23,17 +23,17 @@ class ValidationStatus(Enum):
     UNDEFINED = 'undefined' # default status; technically equivalent to "status not set"
     PENDING = 'pending'
     PASS = 'pass'
+    ERROR = 'error'
+    WARNING = 'warning'
     UNKNOWN = 'unknown' # status when given value is not in the list
 
     @staticmethod
-    def from_value(status):
-        if status in _validation_statuses:
-            return ValidationStatus(status)
-        else:
+    def from_value(status: str):
+        key = status.lower()
+        try:
+            return ValidationStatus(key)
+        except ValueError:
             return ValidationStatus.UNKNOWN
-
-
-_validation_statuses = [item.value for item in ValidationStatus]
 
 
 class ValidationResult:

@@ -18,12 +18,14 @@ def _create_test_json(version=0, status='pending'):
 class ValidationResultTest(TestCase):
 
     def test_from_json(self):
-        self._do_test_from_json(4, 'Pass', ValidationStatus.PASS)
-        self._do_test_from_json(0, ValidationStatus.PENDING)
+        self._do_test_from_json(0, 'Pending', ValidationStatus.PENDING)
+        self._do_test_from_json(1, 'Pass', ValidationStatus.PASS)
+        self._do_test_from_json(1, 'Error', ValidationStatus.ERROR)
+        self._do_test_from_json(2, 'Warning', ValidationStatus.WARNING)
 
-    def _do_test_from_json(self, version: int, validation_status: ValidationStatus):
+    def _do_test_from_json(self, version: int, status: str, validation_status: ValidationStatus):
         # given:
-        json_source = _create_test_json(version=version, status=validation_status.value)
+        json_source = _create_test_json(version=version, status=status)
 
         # when:
         validation_result = ValidationResult.from_json(json_source)
@@ -35,6 +37,15 @@ class ValidationResultTest(TestCase):
 
 
 class ValidationStatusTest(TestCase):
+
+    def test_from_value_case_insensitive(self):
+        # expect:
+        self._assert_correct_mapping(ValidationStatus.PASS, 'pass', 'Pass', 'paSs', 'PASS')
+        self._assert_correct_mapping(ValidationStatus.ERROR, 'error', 'ERROR', 'Error')
+
+    def _assert_correct_mapping(self, expected_status, *variations):
+        for variation in variations:
+            self.assertEqual(expected_status, ValidationStatus.from_value(variation))
 
     def test_from_value_unknown(self):
         # expect:
