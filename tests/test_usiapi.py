@@ -8,7 +8,7 @@ from mock import patch, Mock
 
 import config
 
-from archiver.usiapi import USIAPI
+from archiver.usiapi import USIAPI, ValidationStatus
 from archiver.converter import SampleConverter
 
 
@@ -64,10 +64,14 @@ class USIAPITest(TestCase):
         # when:
         submittable_id = '3fde005'
         authentication_token = '8dd9bb1'
-        results = usi_api.fetch_validation_results(submittable_id, authentication_token)
+        with patch.object(requests, 'get') as http_get:
+            response = Mock()
+            response.json.return_value = {'version': 0, 'validationStatus': 'pending'}
+            result = usi_api.fetch_validation_results(submittable_id, authentication_token)
 
         # then:
-        self.assertIsNotNone(results)
+        self.assertIsNotNone(result)
+        self.assertEqual(ValidationStatus.PENDING, result.status)
 
 
 class TestUSIAPI(unittest.TestCase):

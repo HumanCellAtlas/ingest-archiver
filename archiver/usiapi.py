@@ -1,4 +1,6 @@
 import json
+from enum import Enum
+
 import requests
 import logging
 import config
@@ -16,6 +18,16 @@ def get_aap_token(user_name, password):
 
     return token
 
+
+class ValidationStatus(Enum):
+    UNDEFINED = 'undefined'
+    PENDING = 'pending'
+
+
+class ValidationResult:
+
+    def __init__(self, status=ValidationStatus.UNDEFINED):
+        self.status = status
 
 class USIAPI:
 
@@ -85,7 +97,7 @@ class USIAPI:
         return self._get_embedded_list(response, 'processingStatuses')
 
     def fetch_validation_results(self, submittable_id, token):
-        return {}
+        return ValidationResult(status=ValidationStatus.PENDING)
 
     # ===
 
