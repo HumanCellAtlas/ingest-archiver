@@ -1,15 +1,14 @@
-import unittest
-import os
 import json
+import unittest
+import re
 from unittest import TestCase
 
 import requests
-from mock import patch, Mock
+from mock import patch, Mock, MagicMock
 
 import config
-
-from archiver.usiapi import USIAPI, ValidationStatus
 from archiver.converter import SampleConverter
+from archiver.usiapi import USIAPI, ValidationStatus
 
 
 # TODO use mocks for requests
@@ -59,19 +58,34 @@ class USIAPITest(TestCase):
 
     def test_fetch_validation_results(self):
         # given:
-        usi_api = USIAPI()
+        base_url = 'https://ebi.ac.uk'
+        usi_api = USIAPI(base_url=base_url)
 
         # when:
         submittable_id = '3fde005'
         authentication_token = '8dd9bb1'
         with patch.object(requests, 'get') as http_get:
-            response = Mock()
-            response.json.return_value = {'version': 0, 'validationStatus': 'pending'}
+            response = MagicMock()
+            response.json.return_value = {'version': 7, 'validationStatus': 'Error'}
+            http_get.return_value = response
             result = usi_api.fetch_validation_results(submittable_id, authentication_token)
 
         # then:
+        http_get.assert_called()
+        args, kwargs = http_get.call_args
+
+        # and:
+        url_pattern = re.compile(f'^{base_url}/.*/{submittable_id}$')
+        self.assertTrue(url_pattern.match(args[0]), 'Call URL does not match expected pattern.')
+
+        # and:
+        self.assertIsNotNone(kwargs['headers'], 'No headers supplied with request.')
+        self.assertEqual(f'Bearer {authentication_token}', kwargs['headers']['Authorization'])
+
+        # and:
         self.assertIsNotNone(result)
-        self.assertEqual(ValidationStatus.PENDING, result.status)
+        self.assertEqual(7, result.version)
+        self.assertEqual(ValidationStatus.ERROR, result.status)
 
 
 class TestUSIAPI(unittest.TestCase):

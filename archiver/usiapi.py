@@ -51,10 +51,14 @@ class ValidationResult:
 
 class USIAPI:
 
-    def __init__(self):
+    def __init__(self, base_url=None):
         self.logger = logging.getLogger(__name__)
 
         self.token = get_aap_token(config.AAP_API_USER, config.AAP_API_PASSWORD)
+
+        # TODO add code for setting up base URL using environment variables
+        self.base_url = base_url
+        self.api_url = f'{base_url}/api'
 
         self.headers = {
             'Content-type': 'application/json',
@@ -117,7 +121,10 @@ class USIAPI:
         return self._get_embedded_list(response, 'processingStatuses')
 
     def fetch_validation_results(self, submittable_id, token):
-        return ValidationResult(status=ValidationStatus.PENDING)
+        url = f'{self.api_url}/validationResults/{submittable_id}'
+        headers = {'Authorization': f'Bearer {token}'}
+        json_response = requests.get(url, headers=headers).json()
+        return ValidationResult.from_json(json_response)
 
     # ===
 
