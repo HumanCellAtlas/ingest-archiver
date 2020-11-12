@@ -2,6 +2,8 @@
 [![Maintainability](https://api.codeclimate.com/v1/badges/8ce423001595db4e6de7/maintainability)](https://codeclimate.com/github/HumanCellAtlas/ingest-archiver/maintainability)
 [![codecov](https://codecov.io/gh/HumanCellAtlas/ingest-archiver/branch/master/graph/badge.svg)](https://codecov.io/gh/HumanCellAtlas/ingest-archiver)
 
+_This repository was part of HCA DCP/1 and is not maintained anymore. DCP/2 development of this component continues in the forked repository at https://github.com/ebi-ait/ingest-archiver._
+
 # Ingest Archiver
 The archiver service is an ingest component that:
 - Submits metadata to the appropriate external accessioning authorities. These are currently only EBI authorities (e.g. Biosamples).
